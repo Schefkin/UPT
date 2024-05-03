@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+
+    <link rel="stylesheet" href="stylesheets/test.css">
+</head>
+
+<body>
+
+    <% for(let year of dataByYearArray) { %>
+    
+
+    <h1 class="year">Year <%= year.year %></h1>
+
+    <% const dataByMonth = {}; %>
+    <% year.data.forEach((item) => {
+        
+
+        const month = new Date(item.createdAt).getMonth() + 1;
+
+        if (!dataByMonth[month]) {
+            dataByMonth[month] = [];
+        }
+
+        dataByMonth[month].push(item);
+
+        
+
+    }) %>
+    <% const dataByMonthArray = Object.entries(dataByMonth).map(([month, data]) => ({ month, data })); %>
+    <% dataByMonthArray.sort((a, b) => b.month - a.month); %>
+    
+    <% for(let month of dataByMonthArray) { %>
+    
+
+
+<button class="accordion">Month <%= month.month %></button>
+    <div class="panel">
+        
+            
+        <% const dataByDay = {}; %>
+
+        <% month.data.forEach((item) => {
+            const day = new Date(item.createdAt).getDate();
+            if (!dataByDay[day]) {
+            dataByDay[day] = [];
+        }
+
+        dataByDay[day].push(item);
+        
+        }) %>
+    
+    <% const dataByDayArray = Object.entries(dataByDay).map(([day, data]) => ({ day, data })); %>
+    <% dataByDayArray.sort((a, b) => b.day - a.day); %>
+
+    <% for(let day of dataByDayArray) { %>
+        
+        <button class="accordion">Day <%= day.day; %></button>
+        <div class="panel">
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Temp</th>
+                        <th>Hum</th>
+                        <th>Hour</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(let hour of day.data) { %>
+                    <tr>
+                        <td><%= hour.temp %></td>
+                        <td><%= hour.hum %></td>
+                        <% let min = (hour.createdAt).getMinutes(); %>
+                        <% if( min < 10) {
+                            min = "0" + min;
+                        } %>
+                        <td><%= (hour.createdAt).getHours() + 3; %>:<%= min %></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+
+        </div>
+
+
+        <% } %>
+
+    </div>
+
+    <% } %>
+
+    <% } %>
+
+
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+
+</html>
